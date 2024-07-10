@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QRコードリーダー</title>
+    <script src="qr_packed.js"></script>
+</head>
+<body>
+    <h1>QRコードリーダー</h1>
+    <input type="file" accept="image/*" capture="camera" onchange="readQRCamera(this)">
+    <p id="demo_text">ここにQRコードの内容が表示されます。</p>
+
+    <script>
+        function readQRCamera(node) {
+            var reader = new FileReader();
+            reader.onload = function() {
+                qrcode.callback = function(res) {
+                    if (res instanceof Error) {
+                        alert("QRコードが見つかりませんでした。写真を取り直してください。");
+                    } else {
+                        document.getElementById('demo_text').textContent = res;
+                    }
+                    node.value = ""; // 結果表示後に値をクリア
+                };
+                qrcode.decode(reader.result);
+            };
+            reader.readAsDataURL(node.files[0]);
+        }
+    </script>
+</body>
+</html>
